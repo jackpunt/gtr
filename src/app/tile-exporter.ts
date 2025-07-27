@@ -9,7 +9,8 @@ export class TileExporter extends TileExporterLib {
   gridSpec = GtrCard.myGrid;
 
   // invoked by onclick('makePage')
-  override makeImagePages() {
+  // override
+  makeImagePages0() {
     // CountClaz[] --> [...[count, claz, ...constructorArgs]]
     const cardSingle_front = [
       ...GtrCard.allCards(),
@@ -19,5 +20,13 @@ export class TileExporter extends TileExporterLib {
     this.clazToTemplate(cardSingle_front, this.gridSpec, pageSpecs);
     return pageSpecs;
   }
+
+    // invoked by onclick('makePage')
+  override makeImagePages() {
+    // CountClaz[] --> [...[count, claz, ...constructorArgs]]
+    const pageSpecs: PageSpec[] = GtrCard.makePageSpecs(this);
+    return pageSpecs;
+  }
+
 
 }

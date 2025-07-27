@@ -1,7 +1,8 @@
-import { type CountClaz, type GridSpec, type Paintable } from "@thegraid/easeljs-lib";
+import { type CountClaz, type GridSpec, type PageSpec, type Paintable } from "@thegraid/easeljs-lib";
 import { AliasLoader, Tile } from "@thegraid/hexlib";
 import { C } from "@thegraid/common-lib";
 import { CardShape } from "./card-shape";
+import type { TileExporter } from "./tile-exporter";
 
 
 export class GtrCard extends Tile {
@@ -24,7 +25,6 @@ export class GtrCard extends Tile {
     "Odd-013-Back": 8,    // back of Card
     "Player Aid": 2,
     "Player Aid2": 2,
-    "Odd-099-order": 2,   // Player Aid
     "GtrLeaderCard": 2,
     "3VP-Bonus-Brown": 1,
     "3VP-Bonus-Yellow": 1,
@@ -100,7 +100,7 @@ export class GtrCard extends Tile {
     "Odd-003-Concrete": 6,
     "Odd-004-Brick": 6,
     "Odd-005-Wood": 6,
-    "Odd-006-Rubble": -6,  // back of Site
+    "Odd-006-Rubble": 6,  // back of Site
     "Odd-007-Rubble": -6,
     "Odd-008-Wood": -6,
     "Odd-009-Brick": -6,
@@ -119,11 +119,54 @@ export class GtrCard extends Tile {
     return  [... Object.keys(GtrCard.names)];
   }
 
+  // File1-6x (5-Yellow, 5-Brown, Jack, Sites, PlayerAid) Back: (5-Back, 5-Back, Jack, Sites, PlayerAid2)
+  pub1x6 = {
+    "Yellow-014": 1,
+    "Yellow-015": 1,
+    "Yellow-016": 1,
+    "Yellow-017": 1,
+    "Yellow-018": 1,
+
+    "Brown-019": 1,
+    "Brown-020": 1,
+    "Brown-021": 1,
+    "Brown-022": 1,
+    "Brown-023": 1,
+
+    "Player Aid": 1,
+    "GtrLeaderCard": 1,
+    "Odd-000-Jack": 1,    // double-sided
+    "Odd-001-Stone": 1,   // Site
+    "Odd-002-Marble": 1,
+    "Odd-003-Concrete": 1,
+    "Odd-004-Brick": 1,
+    "Odd-005-Wood": 1,
+    "Odd-006-Rubble": 1,
+  }
+  pub1x6Back = {
+    "Odd-013-Back": 10,    // back of Yellow & Brown
+    "Player Aid2": 1,
+    "Odd-000-Jack": 1,     // double-sided
+    "Odd-007-Rubble": 1,   // back of Site
+    "Odd-008-Wood": 1,
+    "Odd-009-Brick": 1,
+    "Odd-010-Concrete": 1,
+    "Odd-011-Marble": 1,
+    "Odd-012-Stone": 1,
+  }
+
   static allCards(): CountClaz[] {
     return GtrCard.fnames.map((name) => {
       const n = GtrCard.names[name];
       return [n, GtrCard, name, GtrCard.myGrid]
     });
+  }
+  static makePageSpecs(tex: TileExporter) {
+    const pageSpecs: PageSpec[] = [];
+    const cca = GtrCard.allCards();
+    tex.clazToTemplate(cca, GtrCard.myGrid, pageSpecs);
+    return pageSpecs;
+
   }
 
   // Note: 1108 = 1050 + 2 * (bleed-1); 808 = 750 + 2 * (bleed-1)
