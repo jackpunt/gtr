@@ -127,7 +127,7 @@ export class GtrCard extends Tile {
   };
   // 8 x 10 @ 300 dpi; 3.5" x 2.5"
   // ImageGrid.cardSingle_3_5_home (dpi=1 vs x=3.5 @ 300 dpi)
-  static myGrid: GridSpec = GtrCard.cardSingle_3_5_home;
+  static myGrid: GridSpec = GtrCard.cardSingle_3_5_home_dpi;
 
   // 808 x 1108; 750 x 1050
   // gridSpec = ImageGrid.cardSingle_3_5; // cardw: 1050, cardh: 750
@@ -154,7 +154,7 @@ export class GtrCard extends Tile {
 
   addComponents() {
     const h = this.gridSpec.cardh!;
-    const bmImage = AliasLoader.loader.getBitmap(this.Aname, this.gridSpec.cardw!); // scaled to fit cardw
+    const bmImage = AliasLoader.loader.getBitmap(this.Aname, this.radius * 1.4); // scaled to fit cardw
     const { x, y, height, width } = this.baseShape.getBounds();
     // bmImage.image: [808 x 1108]
     if (bmImage) {
@@ -162,6 +162,6 @@ export class GtrCard extends Tile {
       // bmImage.y -= (height - bmImage.image.height)/2; //
       this.addChild(bmImage);
     }
-
+    return;
   }
 }
