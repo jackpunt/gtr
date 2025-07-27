@@ -40,7 +40,7 @@ class NullGameSetup extends GameSetupLib {
     super.startup(scenario);
     Tile.gamePlay = this.gamePlay;
     this.clickButton('makePage'); // app.component.html
-    setTimeout(() => this.setScale('.6'), 300);
+    setTimeout(() => this.setScale('.3'), 300);
   }
 
   setScale(newScale: string) {
@@ -50,7 +50,7 @@ class NullGameSetup extends GameSetupLib {
 
   clickButton(id: string) {
     const anchor = document.getElementById(id) as HTMLAnchorElement;
-    anchor?.onclick?.call(window, {} as any); // no MouseEvent, its not used
+    anchor?.onclick?.call(window, {} as any); // no MouseEvent, its not used; -> TileExporter.makeImagePages()
   }
   override makeHexMap(
     hexMC: Constructor<HexMap<Hex>> = HexMap,

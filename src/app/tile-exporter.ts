@@ -1,4 +1,5 @@
 import { PageSpec, TileExporter as TileExporterLib, type CountClaz, type GridSpec } from "@thegraid/easeljs-lib";
+import { GtrCard } from "./gtr-card";
 // import { CubeCard } from "./cube-card";
 
 // end imports
@@ -17,16 +18,26 @@ export class TileExporter extends TileExporterLib {
     x0: 60 + 1040/2, y0: 25 + 734/2, delx: 1122.5, dely: 734, bleed: 0, bgColor: 'white',
   }
 
+  // for home printer 8x10 @ 300 dpi
+  // // 808 x 1108
+  static stdPoker2: GridSpec = {
+    width: 2400, height: 3000, nrow: 4, ncol: 2, cardw: 1108, cardh: 808, double: false,
+    x0: 60 + 1108/2, y0: 50 + 808/2, delx: 1122.5, dely: 810, bleed: 0, bgColor: 'white',
+  }
+
+  gridSpec = GtrCard.myGrid;
+
+  // invoked by onclick('makePage')
   override makeImagePages() {
     // [...[count, claz, ...constructorArgs]]
     const cardSingle_euro_back = [
     ] as CountClaz[];
     const cardSingle_euro_base = [
-      // ...CubeCard.allCards(),
+      ...GtrCard.allCards(),
     ] as CountClaz[];
 
     const pageSpecs: PageSpec[] = [];
-    this.clazToTemplate(cardSingle_euro_base, TileExporter.euroPoker2, pageSpecs);
+    this.clazToTemplate(cardSingle_euro_base, this.gridSpec, pageSpecs);
     return pageSpecs;
   }
 
