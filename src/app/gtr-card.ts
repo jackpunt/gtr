@@ -9,7 +9,10 @@ export class GtrCard extends Tile {
   // Odd-000:013
   static names3: Record<string, number> = {
     // "Odd-013-Back": 2,    // back of Card
+    "Player Aid": 2,
+    "Player Aid2": 2,
     "Odd-000-Jack": 2,    // back of Card
+    "Purple-040": 3,
     // "Red-014": 3,
     // "Red-015": 3,
     // "Red-016": 3,
@@ -19,6 +22,16 @@ export class GtrCard extends Tile {
   }
   static namesAll: Record<string, number> = {
     "Odd-013-Back": 8,    // back of Card
+    "Player Aid": 2,
+    "Player Aid2": 2,
+    "Odd-099-order": 2,   // Player Aid
+    "GtrLeaderCard": 2,
+    "3VP-Bonus-Brown": 1,
+    "3VP-Bonus-Yellow": 1,
+    "3VP-Bonus-Grey": 1,
+    "3VP-Bonus-Red": 1,
+    "3VP-Bonus-Blue": 1,
+    "3VP-Bonus-Purple": 1,
     "Grey-000": 3,
     "Grey-001": 3,
     "Grey-002": 3,
@@ -95,13 +108,11 @@ export class GtrCard extends Tile {
     "Odd-011-Marble": -6,
     "Odd-012-Stone": -6,
 
-    "Odd-099-order": 2,   // Player Aid
-    "GtrLeaderCard": 2,
     // "Odd-098-Blank": 3,
     // "GtrLegionaryRule": 3,
   };
 
-  static names = GtrCard.names3;
+  static names = GtrCard.namesAll;
 
   /** filenames of images to load */
   static get fnames() {
@@ -127,7 +138,7 @@ export class GtrCard extends Tile {
   };
   // 8 x 10 @ 300 dpi; 3.5" x 2.5"
   // ImageGrid.cardSingle_3_5_home (dpi=1 vs x=3.5 @ 300 dpi)
-  static myGrid: GridSpec = GtrCard.cardSingle_3_5_home_dpi;
+  static myGrid: GridSpec = GtrCard.cardSingle_3_5_home;
 
   // 808 x 1108; 750 x 1050
   // gridSpec = ImageGrid.cardSingle_3_5; // cardw: 1050, cardh: 750
@@ -141,6 +152,13 @@ export class GtrCard extends Tile {
     return wdpi;
   } // nextRadius
 
+  get width() {
+    return this.radius;
+  }
+  get height() {
+    return this.width * 1.4;
+  }
+
   constructor(Aname: string, gridSpec: GridSpec) {
     super(Aname);
     this.gridSpec = gridSpec;
@@ -149,18 +167,17 @@ export class GtrCard extends Tile {
   }
   // invoked by constructor.super()
   override makeShape(): Paintable {
-    return new CardShape('lavender', this.color, this.radius, true, 0, 10);
+    // portrait = true; TileExporter rotates to fit template
+    return new CardShape('lavender', this.color, this.width, true, 0, 10);
   }
 
   addComponents() {
     const h = this.gridSpec.cardh!;
-    const bmImage = AliasLoader.loader.getBitmap(this.Aname, this.radius * 1.4); // scaled to fit cardw
+    const bmImage = AliasLoader.loader.getBitmap(this.Aname, this.height); // scaled to fit cardw
     const { x, y, height, width } = this.baseShape.getBounds();
     // bmImage.image: [808 x 1108]
     if (bmImage) {
-      // bmImage.x -= (width - bmImage.image.width)/2;   // center image on card, may lose the 'bleed' from image
-      // bmImage.y -= (height - bmImage.image.height)/2; //
-      this.addChild(bmImage);
+      this.addChild(bmImage);  // image is centered on baseShape
     }
     return;
   }
