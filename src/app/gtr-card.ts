@@ -1,4 +1,3 @@
-import { C } from "@thegraid/common-lib";
 import { AliasLoader, type Paintable } from "@thegraid/easeljs-lib";
 import { Rectangle } from "@thegraid/easeljs-module";
 import { Tile } from "@thegraid/hexlib";
@@ -43,30 +42,23 @@ export class GtrCard extends Tile {
     "Odd-012-Stone": 1,
   }
 
-  width = 750;
-  color = C.WHITE;
-
   // shorter side of card; longer is radius*1.4
   override get radius() {
-    return this.width;    // may be undefined when super constructor runs
-  }
-
-  get height() {
-    return this.width * 1.4;
+    return CardShape.defaultRadius;    // may be undefined when super constructor runs
   }
 
   constructor(Aname: string, width = 750, rotate = 0, crop = 0) {
+    CardShape.defaultRadius = width;
     super(Aname);
-    this.width = width;
-    this.baseShape = this.makeShape(); // remake after super constructor with correct size
     this.addComponents(crop);
     this.rotation = rotate;
     this.reCache();
   }
-  // invoked by constructor.super()
+
+  // invoked by constructor.super() & this.makeBleed()
   override makeShape(): Paintable {
     // NOTE: portrait = true: TileExporter rotates to fit template
-    return new CardShape('lavender', this.color, (this.width ?? 750), true, 0, 10);
+    return new CardShape('lavender', '', this.radius, true, 0, 10);
   }
 
   addComponents(crop = 0) {

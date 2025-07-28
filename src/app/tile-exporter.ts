@@ -25,9 +25,9 @@ export class TileExporter extends TileExporterLib {
   makeThesePages(cardCountAry: CardCount[] = [this.namesAll]) {
     CardShape.defaultRadius = 750;
     const pageSpecs: PageSpec[] = [];
-    const { cardh, cardw, bleed, dpi } = this.myGrid;
+    const { cardh, cardw, bleed, dpi } = this.myGrid;  // Note: (bleed<0) to crop will also indent makeBleed...
     const narrow = Math.min(cardh!, cardw!);
-    const radius = narrow //? ((dpi ? narrow : narrow + 2 * (bleed ?? 0)) * (dpi ?? 1)) : 750;
+    const radius = narrow;
 
     cardCountAry.forEach(cc => {
       const clazCountAry = Object.keys(cc).map(key => {
