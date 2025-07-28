@@ -55,32 +55,31 @@ export class GtrCard extends Tile {
     return this.width * 1.4;
   }
 
-  constructor(Aname: string, width = 750) {
+  constructor(Aname: string, width = 750, rotate = 0, crop = 0) {
     super(Aname);
     this.width = width;
     this.baseShape = this.makeShape(); // remake after super constructor with correct size
-    this.addComponents();
-    this.textVis;
+    this.addComponents(crop);
+    this.rotation = rotate;
+    this.reCache();
   }
   // invoked by constructor.super()
   override makeShape(): Paintable {
     // NOTE: portrait = true: TileExporter rotates to fit template
-    return new CardShape('lavender', this.color, this.width, true, 0, 10);
+    return new CardShape('lavender', this.color, (this.width ?? 750), true, 0, 10);
   }
 
-  addComponents() {
+  addComponents(crop = 0) {
     const bmImage = AliasLoader.loader.getBitmap(this.Aname, 0); // do not scale
-    const { x, y, width, height } = this.baseShape.getBounds();
     // bmImage.image: [808 x 1108] or [810 x 1110] -> crop to GridSpec (which is baseShape!)
     if (bmImage) {
       const image = bmImage.image;
-      const cropx = Math.max(0, (image.width - width)/2 +1);    // crop to fit (bleed:0) GridSpec
-      const cropy = Math.max(0, (image.height - height)/2 +1);
+      const cropx = crop; // crop if requested (remove bleed for home printer)
+      const cropy = crop;
       bmImage.sourceRect = new Rectangle(cropx, cropy, image.width-2*cropx, image.height-2*cropy);
       bmImage.x += cropx;
       bmImage.y += cropy;
       this.addChild(bmImage);
-      this.reCache();
     }
     return;
   }

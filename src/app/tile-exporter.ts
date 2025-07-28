@@ -1,4 +1,5 @@
 import { ImageGrid, PageSpec, TileExporter as TileExporterLib, type CountClaz, type GridSpec } from "@thegraid/easeljs-lib";
+import { CardShape } from "./card-shape";
 import { GtrCard } from "./gtr-card";
 
 type CardCount = Record<string, number>;
@@ -9,7 +10,7 @@ export class TileExporter extends TileExporterLib {
   // indenting each by 2px to show cut-lines
   static cardSingle_3_5_home: GridSpec = {
     width: 8.25*300, height: 10.85*300, nrow: 4, ncol: 2, cardw: 1050, cardh: 750, double: false,
-    x0: 150 + 1050/2, y0: 100 + 750/2, delx: 1050, dely: 750, bleed: 0, bgColor: 'white',
+    x0: 150 + 1050/2, y0: 100 + 750/2, delx: 1050, dely: 750, bleed: -30, bgColor: 'white',
   }
   // from ImageGrid:
   static cardSingle_3_5 = {
@@ -22,27 +23,28 @@ export class TileExporter extends TileExporterLib {
   myGrid: GridSpec = TileExporter.cardSingle_3_5_home;
 
   makeThesePages(cardCountAry: CardCount[] = [this.namesAll]) {
+    CardShape.defaultRadius = 750;
     const pageSpecs: PageSpec[] = [];
     const { cardh, cardw, bleed, dpi } = this.myGrid;
     const narrow = Math.min(cardh!, cardw!);
-    const radius = narrow ? ((dpi ? narrow : narrow + 2 * (bleed ?? 0)) * (dpi ?? 1)) : 750;
+    const radius = narrow //? ((dpi ? narrow : narrow + 2 * (bleed ?? 0)) * (dpi ?? 1)) : 750;
 
     cardCountAry.forEach(cc => {
-      const clazCountAry = Object.keys(cc).map((name) => {
-        const count = cc[name];
-        return [count, GtrCard, name, radius] as CountClaz;
+      const clazCountAry = Object.keys(cc).map(key => {
+        const count = cc[key], rot = (count < 0) ? 180 : 0, crop = ((bleed ?? 0) < 0) ? -bleed! : 0;
+        const name = key.replace(/\.+$/, '');
+        return [count, GtrCard, name, radius, rot, crop] as CountClaz;
       });
       this.clazToTemplate(clazCountAry, this.myGrid, pageSpecs);
     })
     return pageSpecs;
   }
-  /** Files to load */
-  get fnames() { return Object.keys(this.namesAll) }
+  /** Files to load; rm trailing dots */
+  get fnames() { return Object.keys(this.namesAll).map(key => key.replace(/\.+$/, '')) }
 
   // All the Files to be loaded:
   namesAll: CardCount = {
     "Odd-013-Back": 1,    // back of Card
-    "Odd-013-Back1": 1,   // back of Card (again)
     "Player Aid": 1,
     "Player Aid2": 1,
     "GtrLeaderCard": 1,
@@ -138,13 +140,15 @@ export class TileExporter extends TileExporterLib {
   }
 
   namesSmall: CardCount = {
-    // "Odd-013-Back": 2,    // back of Card
     "Player Aid": 2,
     "Player Aid2": 2,
-    "Odd-000-Jack": 2,    // back of Card
-    "Purple-040": 3,
-    // "Red-014": 3,
-    // "Red-015": 3,
+    "Odd-000-Jack": 1,
+    "GtrLeaderCard": 1,
+    "Odd-000-Jack.": 1,
+    "GtrLeaderCard.": 1,
+    "Purple-040.": 3,
+    "Red-014": 3,
+    "Red-015": 3,
     // "Red-016": 3,
     // "Grey-000": 3,
     "Grey-001": 3,
@@ -255,6 +259,7 @@ export class TileExporterPro extends TileExporter {
   constructor() {
     super();
     this.myGrid = ImageGrid.cardSingle_3_5; // 750 x 1050 + bleed: 30
+    // this.myGrid = TileExporter.cardSingle_3_5; // 750 x 1050 + bleed: 30
   }
   // invoked by onclick('makePage')
   override makeImagePages() {
@@ -285,13 +290,13 @@ export class TileExporterPro extends TileExporter {
     "Odd-006-Rubble": 1,
   }
   pub1x6Back: CardCount = {
-    "Odd-013-Back": 9,    // back of Yellow & Brown
-    "Odd-000-Jack": -1,     // double-sided
+    "Odd-013-Back.": 9,    // back of Yellow & Brown
+    "Odd-000-Jack": -1,    // double-sided
     "Player Aid2": -1,
-    "Odd-013-Back1": 1,    // back of Yellow & Brown
-    "Odd-009-Brick": -1,
+    "Odd-013-Back": 1,     // back of Yellow & Brown
+    "Odd-009-Brick": -1,   // back of Site
     "Odd-008-Wood": -1,
-    "Odd-007-Rubble": -1,   // back of Site
+    "Odd-007-Rubble": -1,
     "Odd-012-Stone": -1,
     "Odd-011-Marble": -1,
     "Odd-010-Concrete": -1,
