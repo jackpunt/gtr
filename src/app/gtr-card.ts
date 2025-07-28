@@ -1,7 +1,7 @@
 import { C } from "@thegraid/common-lib";
-import { type Paintable } from "@thegraid/easeljs-lib";
+import { AliasLoader, type Paintable } from "@thegraid/easeljs-lib";
 import { Rectangle } from "@thegraid/easeljs-module";
-import { AliasLoader, Tile } from "@thegraid/hexlib";
+import { Tile } from "@thegraid/hexlib";
 import { CardShape } from "./card-shape";
 
 type CardCount = Record<string, number>;
@@ -74,8 +74,8 @@ export class GtrCard extends Tile {
     // bmImage.image: [808 x 1108] or [810 x 1110] -> crop to GridSpec (which is baseShape!)
     if (bmImage) {
       const image = bmImage.image;
-      const cropx =  (image.width - width)/2 +1;    // crop to fit (bleed:0) GridSpec
-      const cropy =  (image.height - height)/2 +1;
+      const cropx = Math.max(0, (image.width - width)/2 +1);    // crop to fit (bleed:0) GridSpec
+      const cropy = Math.max(0, (image.height - height)/2 +1);
       bmImage.sourceRect = new Rectangle(cropx, cropy, image.width-2*cropx, image.height-2*cropy);
       bmImage.x += cropx;
       bmImage.y += cropy;

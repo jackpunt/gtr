@@ -11,7 +11,11 @@ export class TileExporter extends TileExporterLib {
     width: 8.25*300, height: 10.85*300, nrow: 4, ncol: 2, cardw: 1050, cardh: 750, double: false,
     x0: 150 + 1050/2, y0: 100 + 750/2, delx: 1050, dely: 750, bleed: 0, bgColor: 'white',
   }
-
+  // from ImageGrid:
+  static cardSingle_3_5 = {
+    width: 3600, height: 5400, nrow: 6, ncol: 3, cardw: 1050, cardh: 750, // (inch_w*dpi + 2*bleed)
+    x0: 120 + 3.5 * 150 + 30, y0: 83 + 3.5 * 150 + 30, delx: 1125, dely: 825, bleed: 30, double: false,
+  };
   // 8 x 10 @ 300 dpi; 3.5" x 2.5"
   // cardSingle_3_5_home (dpi=1 vs x=3.5 @ 300 dpi)
   // cardw: 1050, cardh: 750 (image is 1108 X 808...)
@@ -38,6 +42,7 @@ export class TileExporter extends TileExporterLib {
   // All the Files to be loaded:
   namesAll: CardCount = {
     "Odd-013-Back": 1,    // back of Card
+    "Odd-013-Back1": 1,   // back of Card (again)
     "Player Aid": 1,
     "Player Aid2": 1,
     "GtrLeaderCard": 1,
@@ -271,7 +276,6 @@ export class TileExporterPro extends TileExporter {
     "Brown-023": 1,
 
     "Player Aid": 1,
-    "GtrLeaderCard": 1,
     "Odd-000-Jack": 1,    // double-sided
     "Odd-001-Stone": 1,   // Site
     "Odd-002-Marble": 1,
@@ -281,15 +285,16 @@ export class TileExporterPro extends TileExporter {
     "Odd-006-Rubble": 1,
   }
   pub1x6Back: CardCount = {
-    "Odd-013-Back": 10,    // back of Yellow & Brown
-    "Player Aid2": 1,
-    "Odd-000-Jack": 1,     // double-sided
-    "Odd-007-Rubble": 1,   // back of Site
-    "Odd-008-Wood": 1,
-    "Odd-009-Brick": 1,
-    "Odd-010-Concrete": 1,
-    "Odd-011-Marble": 1,
-    "Odd-012-Stone": 1,
+    "Odd-013-Back": 9,    // back of Yellow & Brown
+    "Odd-000-Jack": -1,     // double-sided
+    "Player Aid2": -1,
+    "Odd-013-Back1": 1,    // back of Yellow & Brown
+    "Odd-009-Brick": -1,
+    "Odd-008-Wood": -1,
+    "Odd-007-Rubble": -1,   // back of Site
+    "Odd-012-Stone": -1,
+    "Odd-011-Marble": -1,
+    "Odd-010-Concrete": -1,
   }
 
 }

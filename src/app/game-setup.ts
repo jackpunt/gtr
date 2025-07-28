@@ -1,5 +1,6 @@
 import { stime, type Constructor } from '@thegraid/common-lib';
-import { AliasLoader, GameSetup as GameSetupLib, Hex2, HexMap, MapCont, Scenario as Scenario0, Table, Tile, TP, type Hex } from '@thegraid/hexlib';
+import { AliasLoader } from '@thegraid/easeljs-lib';
+import { GameSetup as GameSetupLib, Hex2, HexMap, MapCont, Scenario as Scenario0, Table, Tile, TP, type Hex } from '@thegraid/hexlib';
 // import { CardShape } from './card-shape';
 
 import { TileExporter, TileExporterHome, TileExporterPro } from './tile-exporter';
@@ -22,7 +23,7 @@ class NullGameSetup extends GameSetupLib {
     super(canvasId, qParam)
   }
 
-  tileExporter = new TileExporter(); // enable 'Make Pages' buttons
+  tileExporter = new TileExporterPro(); // enable 'Make Pages' buttons
 
   override initialize(canvasId: string): void {
     console.log(stime(this, `---------------------   GameSetup.initialize  ----------------`))
