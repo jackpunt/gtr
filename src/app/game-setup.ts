@@ -2,8 +2,7 @@ import { stime, type Constructor } from '@thegraid/common-lib';
 import { AliasLoader, GameSetup as GameSetupLib, Hex2, HexMap, MapCont, Scenario as Scenario0, Table, Tile, TP, type Hex } from '@thegraid/hexlib';
 // import { CardShape } from './card-shape';
 
-import { TileExporter } from './tile-exporter';
-import { GtrCard } from './gtr-card';
+import { TileExporter, TileExporterHome, TileExporterPro } from './tile-exporter';
 
 /** returns an Array filled with n Elements: [0 .. n-1] or [dn .. dn+n-1] or [f(0) .. f(n-1)] */
 export function arrayN(n: number, nf: number | ((i: number) => number) = 0) {
@@ -32,7 +31,7 @@ class NullGameSetup extends GameSetupLib {
   }
 
   override loadImagesThenStartup() {
-    AliasLoader.loader.fnames = GtrCard.fnames;
+    AliasLoader.loader.fnames = this.tileExporter.fnames; // all the file names
     super.loadImagesThenStartup();    // loader.loadImages(() => this.startup(qParams));
   }
 

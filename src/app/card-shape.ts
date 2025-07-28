@@ -18,7 +18,7 @@ export class CardShape extends RectShape {
    * @param rr [max(w,h) * .05] rounded corner radius
    */
   constructor(fillc = 'lavender', strokec = C.grey64, rad = CardShape.onScreenRadius, portrait = false, ss?: number, rr?: number) {
-    if (rad <= 1) rad = rad * CardShape.onScreenRadius;
+    if (rad <= 1) rad = rad * CardShape.onScreenRadius; // scale down for small size!
     const s = ss ?? rad * .04;
     const a = 3.5 / 2.5; // aspect: length of long side relative to short side = 1.4
     const w = (portrait ? rad : rad * a) - 2 * s, h = (portrait ? rad * a : rad) - 2 * s;
