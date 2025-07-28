@@ -7,22 +7,17 @@ type CardCount = Record<string, number>;
 export class TileExporter extends TileExporterLib {
 
   // Note: 1108 = 1050 + 2 * (bleed-1); 808 = 750 + 2 * (bleed-1)
-  // indenting each by 2px to show cut-lines
   static cardSingle_3_5_home: GridSpec = {
     width: 8.25*300, height: 10.85*300, nrow: 4, ncol: 2, cardw: 1050, cardh: 750, double: false,
     x0: 150 + 1050/2, y0: 100 + 750/2, delx: 1050, dely: 750, bleed: -30, bgColor: 'white',
   }
-  // from ImageGrid:
-  static cardSingle_3_5 = {
-    width: 3600, height: 5400, nrow: 6, ncol: 3, cardw: 1050, cardh: 750, // (inch_w*dpi + 2*bleed)
-    x0: 120 + 3.5 * 150 + 30, y0: 83 + 3.5 * 150 + 30, delx: 1125, dely: 825, bleed: 30, double: false,
-  };
+
   // 8 x 10 @ 300 dpi; 3.5" x 2.5"
   // cardSingle_3_5_home (dpi=1 vs x=3.5 @ 300 dpi)
   // cardw: 1050, cardh: 750 (image is 1108 X 808...)
   myGrid: GridSpec = TileExporter.cardSingle_3_5_home;
 
-  makeThesePages(cardCountAry: CardCount[] = [this.namesAll]) {
+  makeThesePages(cardCountAry: CardCount[] = [this.namesAll], pageNames: string[] =[]) {
     CardShape.defaultRadius = 750;
     const pageSpecs: PageSpec[] = [];
     const { cardh, cardw, bleed, dpi } = this.myGrid;  // Note: (bleed<0) to crop will also indent makeBleed...
@@ -37,6 +32,8 @@ export class TileExporter extends TileExporterLib {
       });
       this.clazToTemplate(clazCountAry, this.myGrid, pageSpecs);
     })
+    // apply given baseNames to each page:
+    pageSpecs.forEach((spec, n) => spec.basename = pageNames[Math.min(n, pageNames.length-1)])
     return pageSpecs;
   }
   /** Files to load; rm trailing dots */
@@ -259,15 +256,29 @@ export class TileExporterPro extends TileExporter {
   constructor() {
     super();
     this.myGrid = ImageGrid.cardSingle_3_5; // 750 x 1050 + bleed: 30
-    // this.myGrid = TileExporter.cardSingle_3_5; // 750 x 1050 + bleed: 30
   }
   // invoked by onclick('makePage')
   override makeImagePages() {
-    return this.makeThesePages([this.pub1x6, this.pub1x6Back]);
+    return this.makeThesePages(
+      [
+        // this.spare0x1, this.spare0x1Back,
+        this.pub1x5, this.pub1x5Back,
+        this.pub2x1, this.pub2x1Back,
+        this.pub3x3, this.pub4x3, this.pub5x1,
+        this.pub6x_back
+      ],
+      [
+        // 'spare0x1', 'spare0x1Back',
+        'pub1x5', 'pub1x5Back',
+        'pub2x1', 'pub2x1Back',
+        'pub3x3', 'pub4x3', 'pub5x1',
+        'pub6x_back]',
+      ]
+      );
   }
 
     // File1-6x (5-Yellow, 5-Brown, Jack, Sites, PlayerAid) Back: (5-Back, 5-Back, Jack, Sites, PlayerAid2)
-  pub1x6: CardCount = {
+    pub1x5: CardCount = {
     "Yellow-014": 1,
     "Yellow-015": 1,
     "Yellow-016": 1,
@@ -282,6 +293,7 @@ export class TileExporterPro extends TileExporter {
 
     "Player Aid": 1,
     "Odd-000-Jack": 1,    // double-sided
+
     "Odd-001-Stone": 1,   // Site
     "Odd-002-Marble": 1,
     "Odd-003-Concrete": 1,
@@ -289,17 +301,131 @@ export class TileExporterPro extends TileExporter {
     "Odd-005-Wood": 1,
     "Odd-006-Rubble": 1,
   }
-  pub1x6Back: CardCount = {
+  pub1x5Back: CardCount = {
     "Odd-013-Back.": 9,    // back of Yellow & Brown
     "Odd-000-Jack": -1,    // double-sided
     "Player Aid2": -1,
     "Odd-013-Back": 1,     // back of Yellow & Brown
-    "Odd-009-Brick": -1,   // back of Site
-    "Odd-008-Wood": -1,
-    "Odd-007-Rubble": -1,
-    "Odd-012-Stone": -1,
-    "Odd-011-Marble": -1,
     "Odd-010-Concrete": -1,
+    "Odd-011-Marble": -1,
+    "Odd-012-Stone": -1,
+    "Odd-007-Rubble": -1,
+    "Odd-008-Wood": -1,
+    "Odd-009-Brick": -1,   // back of Site
+  }
+
+  pub2x1: CardCount = {
+    "Yellow-014": 1,
+    "Yellow-015": 1,
+    "Yellow-016": 1,
+    "Yellow-017": 1,
+    "Yellow-018": 1,
+
+    "Brown-019": 1,
+    "Brown-020": 1,
+    "Brown-021": 1,
+    "Brown-022": 1,
+    "Brown-023": 1,
+
+    "GtrLeaderCard": 1,
+    "Odd-000-Jack": 1,     // double-sided
+
+    "Odd-001-Stone": 1,   // Site
+    "Odd-002-Marble": 1,
+    "Odd-003-Concrete": 1,
+    "Odd-004-Brick": 1,
+    "Odd-005-Wood": 1,
+    "Odd-006-Rubble": 1,
+  }
+
+  pub2x1Back: CardCount = {
+    "Odd-013-Back.": 9,    // back of Yellow & Brown
+    "Odd-000-Jack": -1,    // double-sided
+    "GtrLeaderCard": -1,
+    "Odd-013-Back": -1,     // back of Yellow & Brown
+    "Odd-010-Concrete": -1,// back of Site
+    "Odd-011-Marble": -1,
+    "Odd-012-Stone": -1,
+    "Odd-007-Rubble": -1,
+    "Odd-008-Wood": -1,
+    "Odd-009-Brick": -1,
+  }
+
+  pub3x3: CardCount = {
+    "Grey-000": 1,
+    "Grey-001": 1,
+    "Grey-002": 1,
+    "Grey-003": 1,
+    "Grey-004": 1,
+    "Grey-005": 1,
+    "Grey-006": 1,
+    "Grey-007": 1,
+    "Grey-008": 1,
+    "Grey-009": 1,
+
+    "Red-010": 1,
+    "Red-011": 1,
+    "Red-012": 1,
+    "Red-013": 1,
+    "Red-014": 1,
+    "Red-015": 1,
+    "Red-016": 1,
+    "Red-017": 1,
+  }
+  pub4x3: CardCount = {
+    "Red-018": 1,
+    "Red-019": 1,
+
+    "Blue-021": 1,
+    "Blue-022": 1,
+    "Blue-023": 1,
+    "Blue-024": 1,
+    "Blue-025": 1,
+    "Blue-026": 1,
+    "Blue-027": 1,
+    "Blue-028": 1,
+    "Blue-029": 1,
+    "Blue-030": 1,
+
+    "Purple-031": 1,
+    "Purple-032": 1,
+    "Purple-033": 1,
+    "Purple-034": 1,
+    "Purple-035": 1,
+    "Purple-036": 1,
+  }
+  pub5x1: CardCount ={
+    "Purple-037": 3,
+    "Purple-038": 3,
+    "Purple-039": 3,
+    "Purple-040": 3,
+
+    "3VP-Bonus-Brown": 1,
+    "3VP-Bonus-Yellow": 1,
+    "3VP-Bonus-Grey": 1,
+    "3VP-Bonus-Red": 1,
+    "3VP-Bonus-Blue": 1,
+    "3VP-Bonus-Purple": 1,
+  }
+  pub6x_back: CardCount = {
+    "Odd-013-Back": 18,    // back of Card
+  }
+  spare0x1: CardCount = {
+    "Player Aid": 3,
+    "Player Aid.": 1,
+    "GtrLeaderCard": 1,
+    "Player Aid..": 1,
+    "Purple-040": 3,
+    "Odd-004-Brick": 6,
+  }
+  spare0x1Back: CardCount = {
+    "Player Aid2": -3,
+    "Player Aid2.": -1,
+    "GtrLeaderCard": -1,
+    "Player Aid2..": -1,
+    "Odd-013-Back.": 3,    // back of Yellow & Brown
+    "Odd-009-Brick": -6,   // back of Site
+
   }
 
 }
