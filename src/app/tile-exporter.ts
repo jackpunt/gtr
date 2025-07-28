@@ -8,7 +8,7 @@ export class TileExporter extends TileExporterLib {
   // Note: 1108 = 1050 + 2 * (bleed-1); 808 = 750 + 2 * (bleed-1)
   // indenting each by 2px to show cut-lines
   static cardSingle_3_5_home: GridSpec = {
-    width: 8.25*300, height: 10.85*300, nrow: 4, ncol: 2, cardw: 1050-2, cardh: 750-2, double: false,
+    width: 8.25*300, height: 10.85*300, nrow: 4, ncol: 2, cardw: 1050, cardh: 750, double: false,
     x0: 150 + 1050/2, y0: 100 + 750/2, delx: 1050, dely: 750, bleed: 0, bgColor: 'white',
   }
 
@@ -19,14 +19,14 @@ export class TileExporter extends TileExporterLib {
 
   makeThesePages(cardCountAry: CardCount[] = [this.namesAll]) {
     const pageSpecs: PageSpec[] = [];
-    const { cardh: wide, bleed, dpi } = this.myGrid;
-    const wdpi = wide ? ((dpi ? wide : wide+2) * (dpi ?? 1)) : 750;
-    // const wdpi = wide ? ((dpi ? wide : wide +2*(bleed ?? 0)) * (dpi ?? 1)) : 750;
+    const { cardh, cardw, bleed, dpi } = this.myGrid;
+    const narrow = Math.min(cardh!, cardw!);
+    const radius = narrow ? ((dpi ? narrow : narrow + 2 * (bleed ?? 0)) * (dpi ?? 1)) : 750;
 
     cardCountAry.forEach(cc => {
       const clazCountAry = Object.keys(cc).map((name) => {
         const count = cc[name];
-        return [count, GtrCard, name, wdpi] as CountClaz;
+        return [count, GtrCard, name, radius] as CountClaz;
       });
       this.clazToTemplate(clazCountAry, this.myGrid, pageSpecs);
     })

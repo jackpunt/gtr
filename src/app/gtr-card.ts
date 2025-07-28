@@ -1,6 +1,7 @@
-import { type CountClaz, type GridSpec, type PageSpec, type Paintable } from "@thegraid/easeljs-lib";
-import { AliasLoader, Tile } from "@thegraid/hexlib";
 import { C } from "@thegraid/common-lib";
+import { type Paintable } from "@thegraid/easeljs-lib";
+import { Rectangle } from "@thegraid/easeljs-module";
+import { AliasLoader, Tile } from "@thegraid/hexlib";
 import { CardShape } from "./card-shape";
 
 type CardCount = Record<string, number>;
@@ -47,8 +48,8 @@ export class GtrCard extends Tile {
 
   // shorter side of card; longer is radius*1.4
   override get radius() {
-    return this.width;
-  } // nextRadius
+    return this.width;    // may be undefined when super constructor runs
+  }
 
   get height() {
     return this.width * 1.4;
@@ -57,26 +58,28 @@ export class GtrCard extends Tile {
   constructor(Aname: string, width = 750) {
     super(Aname);
     this.width = width;
+    this.baseShape = this.makeShape(); // remake after super constructor with correct size
     this.addComponents();
     this.textVis;
   }
   // invoked by constructor.super()
   override makeShape(): Paintable {
-    // portrait = true: TileExporter rotates to fit template
+    // NOTE: portrait = true: TileExporter rotates to fit template
     return new CardShape('lavender', this.color, this.width, true, 0, 10);
   }
 
   addComponents() {
     const bmImage = AliasLoader.loader.getBitmap(this.Aname, 0); // do not scale
-    const { x, y, height, width } = this.baseShape.getBounds();
+    const { x, y, width, height } = this.baseShape.getBounds();
     // bmImage.image: [808 x 1108] or [810 x 1110] -> crop to GridSpec (which is baseShape!)
     if (bmImage) {
-      // bmImage.setBounds(width/2, height/2, width, height);
       const image = bmImage.image;
-      // bmImage.x -= (width - bmImage.image.width)/2;   // center image on card, may lose the 'bleed' from image
-      // bmImage.y -= (height - bmImage.image.height)/2; //      this.addChild(bmImage);  // image is centered on baseShape
+      const cropx =  (image.width - width)/2 +1;    // crop to fit (bleed:0) GridSpec
+      const cropy =  (image.height - height)/2 +1;
+      bmImage.sourceRect = new Rectangle(cropx, cropy, image.width-2*cropx, image.height-2*cropy);
+      bmImage.x += cropx;
+      bmImage.y += cropy;
       this.addChild(bmImage);
-      this.setBounds(x, y, width, height);
       this.reCache();
     }
     return;
