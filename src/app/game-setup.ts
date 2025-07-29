@@ -1,17 +1,10 @@
 import { stime, type Constructor } from '@thegraid/common-lib';
 import { AliasLoader } from '@thegraid/easeljs-lib';
 import { GameSetup as GameSetupLib, Hex2, HexMap, MapCont, Scenario as Scenario0, Table, Tile, TP, type Hex } from '@thegraid/hexlib';
-// import { CardShape } from './card-shape';
 
-import { TileExporter, TileExporterHome, TileExporterPro } from './tile-exporter';
+import { TileExporter, TileExporterHome, TileExporterPro, TileExporterSpare } from './tile-exporter';
 
-/** returns an Array filled with n Elements: [0 .. n-1] or [dn .. dn+n-1] or [f(0) .. f(n-1)] */
-export function arrayN(n: number, nf: number | ((i: number) => number) = 0) {
-  const fi = (typeof nf === 'number') ? (i: number) => (i + nf) : nf;
-  return Array.from(Array(n), (_, i) => fi(i))
-}
-
-type Params = Record<string, any>; // until hexlib supplies
+type Params = Record<string, any>; // until common-lib supplies
 export interface Scenario extends Scenario0 {
   nPlayers?: number;
 };
@@ -20,10 +13,13 @@ export interface Scenario extends Scenario0 {
 class NullGameSetup extends GameSetupLib {
 
   constructor(canvasId?: string, qParam?: Params) {
-    super(canvasId, qParam)
+    super(canvasId, qParam);
+    const exp = qParam?.['t'] ?? 0;
+    const tileExp = [TileExporter, TileExporterSpare, TileExporterHome, TileExporterPro][exp]
+    this.tileExporter = new tileExp(); // enable 'Make Pages' buttons
   }
 
-  tileExporter = new TileExporterPro(); // enable 'Make Pages' buttons
+  tileExporter = new TileExporter(); // enable 'Make Pages' buttons
 
   override initialize(canvasId: string): void {
     console.log(stime(this, `---------------------   GameSetup.initialize  ----------------`))

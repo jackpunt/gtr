@@ -17,7 +17,7 @@ export class TileExporter extends TileExporterLib {
   // cardw: 1050, cardh: 750 (image is 1108 X 808...)
   myGrid: GridSpec = TileExporter.cardSingle_3_5_home;
 
-  makeThesePages(cardCountAry: CardCount[] = [this.namesAll], pageNames: string[] =[]) {
+  makeThesePages(cardCountAry: CardCount[] = [this.namesSmall], pageNames: string[] =[]) {
     CardShape.defaultRadius = 750;
     const pageSpecs: PageSpec[] = [];
     const { cardh, cardw, bleed, dpi } = this.myGrid;  // Note: (bleed<0) to crop will also indent makeBleed...
@@ -158,9 +158,6 @@ export class TileExporterHome extends TileExporter {
   override makeImagePages() {
     return this.makeThesePages([this.names3]);
   }
-  // Grey-000:009, Red-010:019, Yellow-014:018, Brown-019:023, Blue-021:030, Purple-031:040,
-  // Odd-000:013
-
   names3: CardCount = {
     "Odd-013-Back": 8,    // back of Card
     "Player Aid": 4,
@@ -249,6 +246,33 @@ export class TileExporterHome extends TileExporter {
     "Odd-012-Stone": -6,
 
   };
+}
+
+export class TileExporterSpare extends TileExporter {
+
+  constructor() {
+    super();
+    this.myGrid = ImageGrid.cardSingle_3_5; // 750 x 1050 + bleed: 30
+  }
+  override makeImagePages() {
+    return this.makeThesePages([this.spare0x1, this.spare0x1Back], ['spare0x1', 'spare0x1Back']);
+  }
+  spare0x1: CardCount = {
+    "Player Aid": 3,
+    "Player Aid.": 1,
+    "GtrLeaderCard": 1,
+    "Player Aid..": 1,
+    "Purple-040": 3,
+    "Odd-004-Brick": 6,
+  }
+  spare0x1Back: CardCount = {
+    "Player Aid2": -3,
+    "Player Aid2.": -1,
+    "GtrLeaderCard": -1,
+    "Player Aid2..": -1,
+    "Odd-013-Back.": 3,    // back of Yellow & Brown
+    "Odd-009-Brick": -6,   // back of Site
+  }
 }
 
 export class TileExporterPro extends TileExporter {
@@ -409,23 +433,6 @@ export class TileExporterPro extends TileExporter {
   }
   pub6x_back: CardCount = {
     "Odd-013-Back": 18,    // back of Card
-  }
-  spare0x1: CardCount = {
-    "Player Aid": 3,
-    "Player Aid.": 1,
-    "GtrLeaderCard": 1,
-    "Player Aid..": 1,
-    "Purple-040": 3,
-    "Odd-004-Brick": 6,
-  }
-  spare0x1Back: CardCount = {
-    "Player Aid2": -3,
-    "Player Aid2.": -1,
-    "GtrLeaderCard": -1,
-    "Player Aid2..": -1,
-    "Odd-013-Back.": 3,    // back of Yellow & Brown
-    "Odd-009-Brick": -6,   // back of Site
-
   }
 
 }

@@ -1,10 +1,9 @@
-import { AliasLoader, type Paintable } from "@thegraid/easeljs-lib";
+import { AliasLoader, NamedContainer, type Paintable, type Tile } from "@thegraid/easeljs-lib";
 import { Rectangle } from "@thegraid/easeljs-module";
-import { Tile } from "@thegraid/hexlib";
 import { CardShape } from "./card-shape";
 
 type CardCount = Record<string, number>;
-export class GtrCard extends Tile {
+export class GtrCard extends NamedContainer implements Tile {
 
   // File1-6x (5-Yellow, 5-Brown, Jack, Sites, PlayerAid) Back: (5-Back, 5-Back, Jack, Sites, PlayerAid2)
   pub1x6: CardCount = {
@@ -42,23 +41,39 @@ export class GtrCard extends Tile {
     "Odd-012-Stone": 1,
   }
 
-  // shorter side of card; longer is radius*1.4
-  override get radius() {
-    return CardShape.defaultRadius;    // may be undefined when super constructor runs
-  }
+
+  baseShape!: Paintable;
 
   constructor(Aname: string, width = 750, rotate = 0, crop = 0) {
-    CardShape.defaultRadius = width;
     super(Aname);
+    this.baseShape = this.makeShape(width);
     this.addComponents(crop);
     this.rotation = rotate;
     this.reCache();
   }
 
   // invoked by constructor.super() & this.makeBleed()
-  override makeShape(): Paintable {
+  /**
+   *
+   * @param size  shorter side of card; longer is radius*1.4
+   *
+   * @returns
+   */
+  makeShape(size?: number): Paintable {
     // NOTE: portrait = true: TileExporter rotates to fit template
-    return new CardShape('lavender', '', this.radius, true, 0, 10);
+    return new CardShape('lavender', '', size, true, 0, 10);
+  }
+   makeBleed(bleed = 0, bleedColor = 'white'): Paintable {
+    const bleedShape = this.makeShape(); // expect a RoundedRect/CardShape or TileShape/HexShape
+    bleedShape.rotation = this.rotation;
+    const { x, y, width, height } = bleedShape.getBounds()
+    bleedShape.scaleX = (width + 2 * bleed) / width;
+    bleedShape.scaleY = (height + 2 * bleed) / height;
+    // bleedShape.x -= bleed; // align bleedShape with baseShape
+    // bleedShape.y -= bleed; // override if makeShape() is centered
+    // bounds now: { x - bleed, y - bleed, width+2*bleed, height+2*bleed }
+    bleedShape.paint(bleedColor, true);
+    return bleedShape;
   }
 
   addComponents(crop = 0) {
