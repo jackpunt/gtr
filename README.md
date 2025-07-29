@@ -4,7 +4,11 @@ Generate Printable image files for Glory to Rome.
 
 http://localhost:4212/?t=0
 
-Choice of output type: 0: small sample HOME, 1: spare parts PRO, 2: full set HOME, full set PRO
+Choice of output type: 
+0: [small sample HOME](http://localhost:4212/?t=0), 
+1: [spare parts PRO](http://localhost:4212/?t=1, 
+2: [full set HOME](http://localhost:4212/?t=2), 
+3: [full set PRO](http://localhost:4212/?t=3)
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.2.
