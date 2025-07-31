@@ -153,22 +153,152 @@ export class TileExporter extends TileExporterLib {
   }
 }
 
+/** full set: print each page 1x, 3x, 6x as indicated */
 export class TileExporterHome extends TileExporter {
 
   override makeImagePages() {
-    return this.makeThesePages([this.names3]);
+    return this.makeThesePages([this.names1], [
+      '6xSites',  '6xSites-Jack-Y', '6xY-B',
+      '3xG', '3xG-R', '3xR-B', '3xB-P', '3xP',
+      '1xBonus', '1xAids', '0xBacks',
+    ]);
   }
-  names3: CardCount = {
-    "Odd-013-Back": 8,    // back of Card
-    "Player Aid": 4,
-    "Player Aid2": 4,
-    "GtrLeaderCard": 2,
+  names1: CardCount = {
+
+    "Odd-001-Stone": 1,   // Site
+    "Odd-012-Stone": -1,  // back of Site
+    "Odd-002-Marble": 1,
+    "Odd-011-Marble": -1,
+    "Odd-003-Concrete": 1,
+    "Odd-010-Concrete": -1,
+    "Odd-004-Brick": 1,
+    "Odd-009-Brick": -1,
+    "Odd-005-Wood": 1,
+    "Odd-008-Wood": -1,
+    "Odd-006-Rubble": 1,
+    "Odd-007-Rubble": -1,
+
+    "Odd-000-Jack": 1,    // double-sided
+    "Odd-000-Jack.": -1,  // double-sided
+
+    "Yellow-014": 1,
+    "Yellow-015": 1,
+    "Yellow-016": 1,
+    "Yellow-017": 1,
+    "Yellow-018": 1,
+    "Yellow-blank": 0,
+
+    "Brown-019": 1,
+    "Brown-020": 1,
+    "Brown-021": 1,
+    "Brown-022": 1,
+    "Brown-023": 1,
+    "Brown-blank": 0,
+
+    "Grey-000": 1,
+    "Grey-001": 1,
+    "Grey-002": 1,
+    "Grey-003": 1,
+    "Grey-004": 1,
+    "Grey-005": 1,
+    "Grey-006": 1,
+    "Grey-007": 1,
+    "Grey-008": 1,
+    "Grey-009": 1,
+    "Grey-blank": 0,
+
+    "Red-010": 1,
+    "Red-011": 1,
+    "Red-012": 1,
+    "Red-013": 1,
+    "Red-014": 1,
+    "Red-015": 1,
+    "Red-016": 1,
+    "Red-017": 1,
+    "Red-018": 1,
+    "Red-019": 1,
+    "Red-blank": 0,
+
+    "Blue-021": 1,
+    "Blue-022": 1,
+    "Blue-023": 1,
+    "Blue-024": 1,
+    "Blue-025": 1,
+    "Blue-026": 1,
+    "Blue-027": 1,
+    "Blue-028": 1,
+    "Blue-029": 1,
+    "Blue-030": 1,
+    "Blue-blank": 0,
+
+    "Purple-031": 1,
+    "Purple-032": 1,
+    "Purple-033": 1,
+    "Purple-034": 1,
+    "Purple-035": 1,
+    "Purple-036": 1,
+    "Purple-037": 1,
+    "Purple-038": 1,
+    "Purple-039": 1,
+    "Purple-040": 1,
+    "Purple-blank": 0,
+
+    "GtrLeaderCard": 1,
+    "GtrLeaderCard.": 1,
+
     "3VP-Bonus-Brown": 1,
     "3VP-Bonus-Yellow": 1,
     "3VP-Bonus-Grey": 1,
     "3VP-Bonus-Red": 1,
     "3VP-Bonus-Blue": 1,
     "3VP-Bonus-Purple": 1,
+
+    "Player Aid": 1,
+    "Player Aid2": -1,
+    "Player Aid.": 1,
+    "Player Aid2.": -1,
+    "Player Aid..": 1,
+    "Player Aid2..": -1,
+    "Player Aid...": 1,
+    "Player Aid2...": -1,
+
+    "Odd-013-Back": 8,    // back of Card
+  };
+}
+
+/** full set: print each page once. */
+export class TileExporterHome3 extends TileExporter {
+
+  override makeImagePages() {
+    return this.makeThesePages([this.names3]);
+  }
+
+  names3: CardCount = {
+    "Odd-013-Back": 8,    // p0: back of Card
+    "Player Aid": 4,      // p1: aids
+    "Player Aid2": 4,
+    "GtrLeaderCard": 2,   // bonus
+    "3VP-Bonus-Brown": 1,
+    "3VP-Bonus-Yellow": 1,
+    "3VP-Bonus-Grey": 1,
+    "3VP-Bonus-Red": 1,
+    "3VP-Bonus-Blue": 1,
+    "3VP-Bonus-Purple": 1,
+
+    "Yellow-014": 6,
+    "Yellow-015": 6,
+    "Yellow-016": 6,
+    "Yellow-017": 6,
+    "Yellow-018": 6,
+    "Yellow-blank": 0,
+
+    "Brown-019": 6,
+    "Brown-020": 6,
+    "Brown-021": 6,
+    "Brown-022": 6,
+    "Brown-023": 6,
+    "Brown-blank": 0,
+
     "Grey-000": 3,
     "Grey-001": 3,
     "Grey-002": 3,
@@ -192,20 +322,6 @@ export class TileExporterHome extends TileExporter {
     "Red-018": 3,
     "Red-019": 3,
     "Red-blank": 0,
-
-    "Yellow-014": 6,
-    "Yellow-015": 6,
-    "Yellow-016": 6,
-    "Yellow-017": 6,
-    "Yellow-018": 6,
-    "Yellow-blank": 0,
-
-    "Brown-019": 6,
-    "Brown-020": 6,
-    "Brown-021": 6,
-    "Brown-022": 6,
-    "Brown-023": 6,
-    "Brown-blank": 0,
 
     "Blue-021": 3,
     "Blue-022": 3,

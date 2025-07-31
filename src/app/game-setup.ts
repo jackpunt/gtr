@@ -2,7 +2,7 @@ import { stime, type Constructor } from '@thegraid/common-lib';
 import { AliasLoader } from '@thegraid/easeljs-lib';
 import { GameSetup as GameSetupLib, Hex2, HexMap, MapCont, Scenario as Scenario0, Table, Tile, TP, type Hex } from '@thegraid/hexlib';
 
-import { TileExporter, TileExporterHome, TileExporterPro, TileExporterSpare } from './tile-exporter';
+import { TileExporter, TileExporterHome, TileExporterHome3, TileExporterPro, TileExporterSpare } from './tile-exporter';
 
 type Params = Record<string, any>; // until common-lib supplies
 export interface Scenario extends Scenario0 {
@@ -15,7 +15,7 @@ class NullGameSetup extends GameSetupLib {
   constructor(canvasId?: string, qParam?: Params) {
     super(canvasId, qParam);
     const exp = qParam?.['t'] ?? 0;
-    const tileExp = [TileExporter, TileExporterSpare, TileExporterHome, TileExporterPro][exp]
+    const tileExp = [TileExporter, TileExporterSpare, TileExporterHome, TileExporterPro, TileExporterHome3][exp]
     this.tileExporter = new tileExp(); // enable 'Make Pages' buttons
   }
 
