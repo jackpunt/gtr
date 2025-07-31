@@ -405,14 +405,14 @@ export class TileExporterPro extends TileExporter {
         this.pub1x5, this.pub1x5Back,
         this.pub2x1, this.pub2x1Back,
         this.pub3x3, this.pub4x3, this.pub5x1,
-        this.pub6x_back
+        this.pub345_Back,
       ],
       [
         // 'spare0x1', 'spare0x1Back',
         'pub1x5', 'pub1x5Back',
         'pub2x1', 'pub2x1Back',
         'pub3x3', 'pub4x3', 'pub5x1',
-        'pub6x_back]',
+        'pub345_Back',
       ]
       );
   }
@@ -547,7 +547,7 @@ export class TileExporterPro extends TileExporter {
     "3VP-Bonus-Blue": 1,
     "3VP-Bonus-Purple": 1,
   }
-  pub6x_back: CardCount = {
+  pub345_Back: CardCount = {
     "Odd-013-Back": 18,    // back of Card
   }
 
