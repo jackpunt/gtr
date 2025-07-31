@@ -11,6 +11,12 @@ Choice of output type:
 - t=3: [full set PRO](http://localhost:4212/?t=3)  Print each page 1x, 3x, 5x, 6x as indicated
 - t=4: [multipage HOME](http://localhost:4212/?t=4) Print each page once
 
+Click "View P0" to reset view to first page.
+
+Click "View Next..." to see successive pages.
+
+Click "Download ..." to download a .png file for the indicated page.
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.2.
 
