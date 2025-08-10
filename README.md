@@ -1,6 +1,8 @@
 # Gtr
 
-Generate Printable image files for Glory to Rome.
+Generate Printable image files for Glory to Rome. (Repulic Edition, with some expansion cards)
+
+The card images have been digitally remastered from the original CGC cards.
 
 http://localhost:4212/?t=0
 
@@ -17,8 +19,11 @@ Click "View Next..." to see successive pages.
 
 Click "Download ..." to download a .png file for the indicated page.
 
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.2.
+
+## Imperium Rulebook pdf
+
+For reference: [The original I.v Imperium Rulebook](src/Glory_to_Rome_Rulebook(EN).pdf)
 
 ## Development server
 
