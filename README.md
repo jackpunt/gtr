@@ -4,6 +4,8 @@ Generate Printable image files for Glory to Rome. (Repulic Edition, with some ex
 
 The card images have been digitally remastered from the original CGC cards.
 
+Preserved for their artistry; derived from "fair use" of material, not for resale.
+
 http://localhost:4212/?t=0
 
 Choice of output type: 
