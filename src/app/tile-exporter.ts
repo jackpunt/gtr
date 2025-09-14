@@ -4,6 +4,8 @@ import { GtrCard } from "./gtr-card";
 
 type CardCount = Record<string, number>;
 
+
+/** multi-format TileExporter base class */
 export class TileExporter extends TileExporterLib {
 
   // Note: 1108 = 1050 + 2 * (bleed-1); 808 = 750 + 2 * (bleed-1)
@@ -15,9 +17,17 @@ export class TileExporter extends TileExporterLib {
   // 8 x 10 @ 300 dpi; 3.5" x 2.5"
   // cardSingle_3_5_home (dpi=1 vs x=3.5 @ 300 dpi)
   // cardw: 1050, cardh: 750 (image is 1108 X 808...)
-  myGrid: GridSpec = TileExporter.cardSingle_3_5_home;
 
-  makeThesePages(cardCountAry: CardCount[] = [this.namesSmall], pageNames: string[] =[]) {
+  myGrid: GridSpec = TileExporter.cardSingle_3_5_home;
+  cardCountAry: CardCount[] = [{ 'Player Aid': 1 }]; // an minimal default
+  pageNames: string[] = [];
+
+  constructor() {
+    super();
+    this.cardCountAry = [this.namesSmall];
+  }
+
+  makeThesePages(cardCountAry = this.cardCountAry, pageNames = this.pageNames) {
     CardShape.defaultRadius = 750;
     const pageSpecs: PageSpec[] = [];
     const { cardh, cardw, bleed, dpi } = this.myGrid;  // Note: (bleed<0) to crop will also indent makeBleed...
@@ -133,7 +143,7 @@ export class TileExporter extends TileExporterLib {
 
   // invoked by onclick('makePage')
   override makeImagePages() {
-    return this.makeThesePages([this.namesSmall]);
+    return this.makeThesePages();
   }
 
   namesSmall: CardCount = {
@@ -155,14 +165,16 @@ export class TileExporter extends TileExporterLib {
 
 /** full set: print each page 1x, 3x, 6x as indicated */
 export class TileExporterHome extends TileExporter {
-
-  override makeImagePages() {
-    return this.makeThesePages([this.names1], [
+  constructor() {
+    super();
+    this.cardCountAry = [this.names1];
+    this.pageNames = [
       '6xSites',  '6xSites-Jack-Y', '6xY-B',
       '3xG', '3xG-R', '3xR-B', '3xB-P', '3xP',
       '1xBonus', '1xAids', '0xBacks',
-    ]);
+    ]
   }
+
   names1: CardCount = {
 
     "Odd-001-Stone": 1,   // Site
@@ -268,9 +280,9 @@ export class TileExporterHome extends TileExporter {
 
 /** full set: print each page once. */
 export class TileExporterHome3 extends TileExporter {
-
-  override makeImagePages() {
-    return this.makeThesePages([this.names3]);
+  constructor() {
+    super();
+    this.cardCountAry = [this.names3];
   }
 
   names3: CardCount = {
@@ -369,10 +381,10 @@ export class TileExporterSpare extends TileExporter {
   constructor() {
     super();
     this.myGrid = ImageGrid.cardSingle_3_5; // 750 x 1050 + bleed: 30
+    this.cardCountAry = [this.spare0x1, this.spare0x1Back];
+    this.pageNames = ['spare0x1', 'spare0x1Back'];
   }
-  override makeImagePages() {
-    return this.makeThesePages([this.spare0x1, this.spare0x1Back], ['spare0x1', 'spare0x1Back']);
-  }
+
   spare0x1: CardCount = {
     "Player Aid": 3,
     "Player Aid.": 1,
@@ -396,29 +408,24 @@ export class TileExporterPro extends TileExporter {
   constructor() {
     super();
     this.myGrid = ImageGrid.cardSingle_3_5; // 750 x 1050 + bleed: 30
-  }
-  // invoked by onclick('makePage')
-  override makeImagePages() {
-    return this.makeThesePages(
-      [
+    this.cardCountAry = [
         // this.spare0x1, this.spare0x1Back,
         this.pub1x5, this.pub1x5Back,
         this.pub2x1, this.pub2x1Back,
         this.pub3x3, this.pub4x3, this.pub5x1,
         this.pub345_Back,
-      ],
-      [
+      ];
+    this.pageNames = [
         // 'spare0x1', 'spare0x1Back',
         'pub1x5', 'pub1x5Back',
         'pub2x1', 'pub2x1Back',
         'pub3x3', 'pub4x3', 'pub5x1',
         'pub345_Back',
-      ]
-      );
+      ];
   }
 
-    // File1-6x (5-Yellow, 5-Brown, Jack, Sites, PlayerAid) Back: (5-Back, 5-Back, Jack, Sites, PlayerAid2)
-    pub1x5: CardCount = {
+  // File1-6x (5-Yellow, 5-Brown, Jack, Sites, PlayerAid) Back: (5-Back, 5-Back, Jack, Sites, PlayerAid2)
+  pub1x5: CardCount = {
     "Yellow-014": 1,
     "Yellow-015": 1,
     "Yellow-016": 1,
