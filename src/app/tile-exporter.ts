@@ -27,7 +27,8 @@ export class TileExporter extends TileExporterLib {
     this.cardCountAry = [this.namesSmall];
   }
 
-  makeThesePages(cardCountAry = this.cardCountAry, pageNames = this.pageNames) {
+  // invoked by onclick('makePage')
+  override makeImagePages(cardCountAry = this.cardCountAry, pageNames = this.pageNames) {
     CardShape.defaultRadius = 750;
     const pageSpecs: PageSpec[] = [];
     const { cardh, cardw, bleed, dpi } = this.myGrid;  // Note: (bleed<0) to crop will also indent makeBleed...
@@ -140,11 +141,6 @@ export class TileExporter extends TileExporterLib {
     "Odd-098-Blank": 1,
     // "GtrLegionaryRule": 1,
   };
-
-  // invoked by onclick('makePage')
-  override makeImagePages() {
-    return this.makeThesePages();
-  }
 
   namesSmall: CardCount = {
     "Player Aid": 2,
