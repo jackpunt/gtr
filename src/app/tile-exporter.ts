@@ -1,4 +1,4 @@
-import { ImageGrid, PageSpec, TileExporter as TileExporterLib, type CountClaz, type GridSpec } from "@thegraid/easeljs-lib";
+import { ImageGrid, PageSpec, TileExporter, type CountClaz, type GridSpec } from "@thegraid/easeljs-lib";
 import { CardShape } from "./card-shape";
 import { GtrCard } from "./gtr-card";
 
@@ -6,7 +6,7 @@ type CardCount = Record<string, number>;
 
 
 /** multi-format TileExporter base class */
-export class TileExporter extends TileExporterLib {
+export class GtrTileExporter extends TileExporter {
 
   // Note: 1108 = 1050 + 2 * (bleed-1); 808 = 750 + 2 * (bleed-1)
   static cardSingle_3_5_home: GridSpec = {
@@ -18,7 +18,7 @@ export class TileExporter extends TileExporterLib {
   // cardSingle_3_5_home (dpi=1 vs x=3.5 @ 300 dpi)
   // cardw: 1050, cardh: 750 (image is 1108 X 808...)
 
-  myGrid: GridSpec = TileExporter.cardSingle_3_5_home;
+  myGrid: GridSpec = ImageGrid.cardSingle_3_5;
   cardCountAry: CardCount[] = [{ 'Player Aid': 1 }]; // an minimal default
   pageNames: string[] = [];
 
@@ -27,22 +27,25 @@ export class TileExporter extends TileExporterLib {
     this.cardCountAry = [this.namesSmall];
   }
 
-  // invoked by onclick('makePage')
-  override makeImagePages(cardCountAry = this.cardCountAry, pageNames = this.pageNames) {
+  /** format Cards as described */
+  makeClazCountArys(cardCountAry: CardCount[], myGrid: GridSpec = this.myGrid) {
     CardShape.defaultRadius = 750;
-    const pageSpecs: PageSpec[] = [];
-    const { cardh, cardw, bleed, dpi } = this.myGrid;  // Note: (bleed<0) to crop will also indent makeBleed...
+    const { cardh, cardw, bleed, dpi } = myGrid;  // Note: (bleed<0) to crop will also indent makeBleed...
     const narrow = Math.min(cardh!, cardw!);
     const radius = narrow;
 
-    cardCountAry.forEach(cc => {
-      const clazCountAry = Object.keys(cc).map(key => {
+    return cardCountAry.map(cc => {
+      return Object.keys(cc).map(key => {
         const count = cc[key], rot = (count < 0) ? 180 : 0, crop = ((bleed ?? 0) < 0) ? -bleed! : 0;
         const name = key.replace(/\.+$/, '');
         return [count, GtrCard, name, radius, rot, crop] as CountClaz;
       });
-      this.clazToTemplate(clazCountAry, this.myGrid, pageSpecs);
-    })
+    }) as CountClaz[][];
+  }
+
+  // invoked by onclick('makePage')
+  override makeImagePages(cardCountAry = this.cardCountAry, pageNames = this.pageNames, pageSpecs: PageSpec[] = []) {
+    this.makeClazCountArys(cardCountAry).forEach(clazCountAry => this.clazToTemplate(clazCountAry, this.myGrid, pageSpecs))
     // apply given baseNames to each page:
     pageSpecs.forEach((spec, n) => spec.basename = pageNames[Math.min(n, pageNames.length-1)])
     return pageSpecs;
@@ -160,7 +163,7 @@ export class TileExporter extends TileExporterLib {
 }
 
 /** full set: print each page 1x, 3x, 6x as indicated */
-export class TileExporterHome extends TileExporter {
+export class TileExporterHome extends GtrTileExporter {
   constructor() {
     super();
     this.cardCountAry = [this.names1];
@@ -275,7 +278,7 @@ export class TileExporterHome extends TileExporter {
 }
 
 /** full set: print each page once. */
-export class TileExporterHome3 extends TileExporter {
+export class TileExporterHome3 extends GtrTileExporter {
   constructor() {
     super();
     this.cardCountAry = [this.names3];
@@ -372,7 +375,7 @@ export class TileExporterHome3 extends TileExporter {
   };
 }
 
-export class TileExporterSpare extends TileExporter {
+export class TileExporterSpare extends GtrTileExporter {
 
   constructor() {
     super();
@@ -399,7 +402,7 @@ export class TileExporterSpare extends TileExporter {
   }
 }
 
-export class TileExporterPro extends TileExporter {
+export class TileExporterPro extends GtrTileExporter {
 
   constructor() {
     super();
