@@ -6,7 +6,6 @@ import { StageComponent } from './stage/stage.component';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [StageComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
